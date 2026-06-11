@@ -1,0 +1,6 @@
+{
+  "name": "Content Studio",
+  "description": "An advanced AI-powered content generation and management native Android app using Kotlin and Jetpack Compose. With a cyberpunk glassmorphism UI, project history tracking, dynamic content creation, canvas flowchart for strategy, local TTS integration, and floating voice assistant linked to Gemini AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

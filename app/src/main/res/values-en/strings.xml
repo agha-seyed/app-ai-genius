@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Content Studio</string>
+    <!-- Step 1 -->
+    <string name="step1_title">Start Project</string>
+    <string name="topic_label">Content Topic</string>
+    <string name="audience_label">Target Audience</string>
+    <string name="platform_label">Target Platform</string>
+    <string name="media_settings">Media Settings</string>
+    <string name="gen_script">Generate Script / Scenario</string>
+    <string name="gen_caption">Generate Caption &amp; Hashtags</string>
+    <string name="gen_image">Generate Images</string>
+    <string name="gen_video">Generate Video</string>
+    <string name="gen_bgm">Background Music (BGM)</string>
+    <string name="gen_voice">Voice Narration</string>
+    <string name="next_step">Next Step</string>
+    
+    <!-- Step 2 -->
+    <string name="step2_title">Review Strategy</string>
+    <string name="refine">Refine Text</string>
+    <string name="flowchart_title">Strategic Flowchart</string>
+    
+    <!-- Step 3 -->
+    <string name="step3_title">Final Assets</string>
+    <string name="audio_player_title">Audio Player</string>
+    <string name="gallery_title">Image Gallery</string>
+    <string name="download">Download / Save</string>
+</resources>

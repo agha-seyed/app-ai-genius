@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">استودیو هوشمند</string>
+    <!-- General -->
+    <string name="next_step">مرحله بعد</string>
+    <string name="generate_content">تولید محتوا</string>
+
+    <!-- Create Project (Step 1) -->
+    <string name="step1_title">پروژه جدید</string>
+    <string name="section_basic_info">اطلاعات پایه محتوا</string>
+    <string name="topic_label">موضوع اصلی</string>
+    <string name="short_desc_label">توضیح کوتاه</string>
+    <string name="source_info_label">منبع یا اطلاعات تکمیلی</string>
+    <string name="platform_label">پلتفرم (اینستاگرام، تیک‌تاک و...)</string>
+    <string name="visual_style_label">سبک بصری (سینماتیک، مینیمال و...)</string>
+
+    <string name="section_studio_audio">استودیو و صدا</string>
+    <string name="gen_voice">نریشن صوتی</string>
+    <string name="gen_bgm">موسیقی پس‌زمینه</string>
+    <string name="voice_gender">جنسیت گوینده (آقا/خانم)</string>
+    <string name="voice_tone">لحن (آرام، حماسی، دوستانه و...)</string>
+
+    <string name="section_visual_media">بصری و مدیا</string>
+    <string name="gen_image">تولید تصویر</string>
+    <string name="frame_count">تعداد فریم (۴، ۵، ۱۰، ۱۵)</string>
+    <string name="gen_video">تولید ویدیو و تیزر</string>
+    <string name="gen_animated_teaser">تولید تیزر متحرک</string>
+    <string name="google_api_note">استفاده از API گوگل (رایگان)</string>
+    <string name="video_style">سبک ویدیو (سینماتیک، انیمیشن، ولاگ)</string>
+
+    <string name="section_infographic">اینفوگرافیک</string>
+    <string name="gen_infographic_smart">اینفوگرافیک هوشمند</string>
+    <string name="lang_selection">زبان (فارسی/انگلیسی)</string>
+    
+    <string name="gen_script">تولید اسکریپت / سناریو</string>
+    <string name="gen_caption">تولید کپشن و هشتگ</string>
+
+    <!-- Detail Screen -->
+    <string name="step2_title">بازبینی استراتژی</string>
+    <string name="refine">بهینه‌سازی متن</string>
+    <string name="flowchart_title">فلوچارت استراتژیک</string>
+    
+    <!-- Final Assets Screen -->
+    <string name="step3_title">خروجی نهایی</string>
+    <string name="audio_player_title">پخش‌کننده صوتی</string>
+    <string name="gallery_title">گالری تصاویر</string>
+    <string name="download">دانلود / ذخیره</string>
+</resources>

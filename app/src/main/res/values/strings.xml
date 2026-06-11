@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Studio</string>
+    <!-- General -->
+    <string name="next_step">Next Step</string>
+    <string name="generate_content">Generate Content</string>
+
+    <!-- Create Project (Step 1) -->
+    <string name="step1_title">New Project</string>
+    <string name="section_basic_info">Basic Content Info</string>
+    <string name="topic_label">Main Topic</string>
+    <string name="short_desc_label">Short Description</string>
+    <string name="source_info_label">Source/Additional Info</string>
+    <string name="platform_label">Platform (Instagram, TikTok, etc.)</string>
+    <string name="visual_style_label">Visual Style (Cinematic, Minimal, etc.)</string>
+
+    <string name="section_studio_audio">Studio &amp; Audio</string>
+    <string name="gen_voice">Voice Narration</string>
+    <string name="gen_bgm">Background Music</string>
+    <string name="voice_gender">Voice Gender (Male/Female)</string>
+    <string name="voice_tone">Tone (Calm, Epic, Friendly, etc.)</string>
+
+    <string name="section_visual_media">Visual &amp; Media</string>
+    <string name="gen_image">Generate Images</string>
+    <string name="frame_count">Frame Count (4, 5, 10, 15)</string>
+    <string name="gen_video">Generate Video/Teaser</string>
+    <string name="gen_animated_teaser">Generate Animated Teaser</string>
+    <string name="google_api_note">Use Google API (Free)</string>
+    <string name="video_style">Video Style (Cinematic, Animation, Vlog)</string>
+
+    <string name="section_infographic">Infographic</string>
+    <string name="gen_infographic_smart">Smart Infographic</string>
+    <string name="lang_selection">Language (Persian/English)</string>
+    
+    <string name="gen_script">Generate Script/Scenario</string>
+    <string name="gen_caption">Generate Caption &amp; Hashtags</string>
+
+    <!-- Detail Screen -->
+    <string name="step2_title">Review Strategy</string>
+    <string name="refine">Refine Text</string>
+    <string name="flowchart_title">Strategic Flowchart</string>
+    
+    <!-- Final Assets Screen -->
+    <string name="step3_title">Final Output</string>
+    <string name="audio_player_title">Audio Player</string>
+    <string name="gallery_title">Image Gallery</string>
+    <string name="download">Download / Save</string>
+</resources>
