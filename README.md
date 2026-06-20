@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="logo.jpg" alt="Wirangar Logo" width="100%" style="max-width: 800px; border-radius: 16px; margin-bottom: 20px;"/>
+</div>
+
 <h1 align="center">Smart Studio AI</h1>
 
 <p align="center">
