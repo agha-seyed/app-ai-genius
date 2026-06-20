@@ -55,14 +55,14 @@ fun DashboardScreen(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(MaterialTheme.shapes.medium)
-                                .background(Brush.linearGradient(listOf(GeoEmerald, GeoCyan))),
+                                .background(Brush.linearGradient(listOf(GeoGold, GeoAmberLight))),
                             contentAlignment = Alignment.Center
                         ) {
                             Text("A", color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
                         }
                         Column {
-                            Text("استودیو هوشمند", style = MaterialTheme.typography.titleMedium, color = GeoTextPrimary)
-                            Text("AI Content Engine", style = MaterialTheme.typography.labelSmall, color = GeoEmerald)
+                            Text(stringResource(R.string.dash_title), style = MaterialTheme.typography.titleMedium, color = GeoTextPrimary)
+                            Text(stringResource(R.string.dash_subtitle), style = MaterialTheme.typography.labelSmall, color = GeoGold)
                         }
                     }
                     IconButton(onClick = onToggleLanguage) {
@@ -84,17 +84,17 @@ fun DashboardScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BottomNavItem("🏠", "خانه", true) {}
-                    BottomNavItem("✨", "تولید", false) { onNavigateToCreate() }
-                    BottomNavItem("📊", "آمار", false) {}
-                    BottomNavItem("⚙️", "تنظیمات", false) {}
+                    BottomNavItem("🏠", stringResource(R.string.nav_home), true) {}
+                    BottomNavItem("✨", stringResource(R.string.nav_create), false) { onNavigateToCreate() }
+                    BottomNavItem("📊", stringResource(R.string.nav_stats), false) {}
+                    BottomNavItem("⚙️", stringResource(R.string.nav_settings), false) {}
                 }
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onNavigateToCreate,
-                containerColor = GeoEmerald,
+                containerColor = GeoGold,
                 contentColor = GeoBackground
             ) {
                 Icon(Icons.Filled.Add, "New")
@@ -103,15 +103,15 @@ fun DashboardScreen(
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("پروژه‌های اخیر", style = MaterialTheme.typography.labelMedium, color = GeoTextSecondary)
+                Text(stringResource(R.string.dash_recent), style = MaterialTheme.typography.labelMedium, color = GeoTextSecondary)
             }
             Spacer(modifier = Modifier.height(12.dp))
             if (projects.isEmpty()) {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     val templates = listOf(
-                        Pair("IG", "سناریو اینستاگرام فروشگاهی"),
-                        Pair("YT", "اسکریپت یوتیوب بررسی تکنولوژی"),
-                        Pair("TK", "ایده ویدیوی وایرال تیک‌تاک")
+                        Pair("IG", stringResource(R.string.template_ig)),
+                        Pair("YT", stringResource(R.string.template_yt)),
+                        Pair("TK", stringResource(R.string.template_tk))
                     )
                     items(templates) { template ->
                         GlassCard(
@@ -120,25 +120,25 @@ fun DashboardScreen(
                                 .clickable { onNavigateToCreate() },
                             cornerRadius = 16.dp
                         ) {
-                            Box(modifier = Modifier.size(32.dp).clip(MaterialTheme.shapes.small).background(GeoCyan.copy(alpha=0.2f)), contentAlignment = Alignment.Center) {
-                                Text(template.first, color = GeoCyan, fontWeight = FontWeight.Bold)
+                            Box(modifier = Modifier.size(32.dp).clip(MaterialTheme.shapes.small).background(GeoAmberLight.copy(alpha=0.2f)), contentAlignment = Alignment.Center) {
+                                Text(template.first, color = GeoAmberLight, fontWeight = FontWeight.Bold)
                             }
                             Spacer(Modifier.height(12.dp))
                             Text(template.second, style = MaterialTheme.typography.bodyMedium, color = GeoTextPrimary, maxLines = 2)
                             Spacer(Modifier.height(4.dp))
-                            Text("همین حالا بسازید", style = MaterialTheme.typography.labelSmall, color = GeoEmerald)
+                            Text(stringResource(R.string.dash_create_now), style = MaterialTheme.typography.labelSmall, color = GeoGold)
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(32.dp))
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(modifier = Modifier.size(120.dp).clip(CircleShape).background(Brush.radialGradient(listOf(GeoCyan.copy(alpha=0.3f), Color.Transparent))), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.size(120.dp).clip(CircleShape).background(Brush.radialGradient(listOf(GeoAmberLight.copy(alpha=0.3f), Color.Transparent))), contentAlignment = Alignment.Center) {
                         Text("🤖", fontSize = 56.sp)
                     }
                     Spacer(Modifier.height(16.dp))
-                    Text("به استودیو هوشمند خوش‌آمدید", style = MaterialTheme.typography.titleLarge, color = GeoTextPrimary, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.dash_welcome), style = MaterialTheme.typography.titleLarge, color = GeoTextPrimary, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
-                    Text("برای همگام‌سازی پروژه‌ها و امکانات پیشرفته، وارد شوید.", style = MaterialTheme.typography.bodyMedium, color = GeoTextSecondary)
+                    Text(stringResource(R.string.dash_login_desc), style = MaterialTheme.typography.bodyMedium, color = GeoTextSecondary)
                     Spacer(Modifier.height(32.dp))
                     
                     // Google Login Mock Button
@@ -149,8 +149,8 @@ fun DashboardScreen(
                         modifier = Modifier.height(56.dp).border(1.dp, GeoGlassBorder, RoundedCornerShape(24.dp)),
                         contentPadding = PaddingValues(horizontal = 24.dp)
                     ) {
-                        Text("G", color = GeoCyan, fontWeight = FontWeight.Bold, fontSize = 24.sp, modifier = Modifier.padding(end = 12.dp))
-                        Text("ورود با حساب گوگل", color = GeoTextPrimary, style = MaterialTheme.typography.bodyLarge)
+                        Text("G", color = GeoAmberLight, fontWeight = FontWeight.Bold, fontSize = 24.sp, modifier = Modifier.padding(end = 12.dp))
+                        Text(stringResource(R.string.dash_login_btn), color = GeoTextPrimary, style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             } else {
@@ -162,8 +162,8 @@ fun DashboardScreen(
                                 .clickable { onNavigateToDetail(project.id) },
                             cornerRadius = 16.dp
                         ) {
-                            Box(modifier = Modifier.size(32.dp).clip(MaterialTheme.shapes.small).background(GeoCyan.copy(alpha=0.2f)), contentAlignment = Alignment.Center) {
-                                Text(project.platform.take(2).uppercase(), color = GeoCyan, fontWeight = FontWeight.Bold)
+                            Box(modifier = Modifier.size(32.dp).clip(MaterialTheme.shapes.small).background(GeoAmberLight.copy(alpha=0.2f)), contentAlignment = Alignment.Center) {
+                                Text(project.platform.take(2).uppercase(), color = GeoAmberLight, fontWeight = FontWeight.Bold)
                             }
                             Spacer(Modifier.height(12.dp))
                             Text(project.topic, style = MaterialTheme.typography.bodyMedium, color = GeoTextPrimary, maxLines = 2)
@@ -192,7 +192,7 @@ fun BottomNavItem(icon: String, label: String, isSelected: Boolean, onClick: () 
             modifier = Modifier
                 .size(48.dp, 32.dp)
                 .clip(CircleShape)
-                .background(if (isSelected) GeoCyan.copy(alpha = 0.2f) else Color.Transparent),
+                .background(if (isSelected) GeoAmberLight.copy(alpha = 0.2f) else Color.Transparent),
             contentAlignment = Alignment.Center
         ) {
             Text(icon, fontSize = 20.sp)
@@ -201,7 +201,7 @@ fun BottomNavItem(icon: String, label: String, isSelected: Boolean, onClick: () 
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = if (isSelected) GeoCyan else GeoTextSecondary,
+            color = if (isSelected) GeoAmberLight else GeoTextSecondary,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
         )
     }

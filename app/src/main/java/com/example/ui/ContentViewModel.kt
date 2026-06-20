@@ -2,11 +2,6 @@ package com.example.ui
 
 import android.app.Application
 import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
-import android.speech.tts.TextToSpeech
-import android.speech.tts.UtteranceProgressListener
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -14,22 +9,32 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.AppDatabase
 import com.example.data.ProjectEntity
 import com.example.data.ProjectRepository
-import com.example.network.Content
-import com.example.network.GenerateContentRequest
-import com.example.network.Part
-import com.example.network.RetrofitClient
+
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
+import kotlinx.coroutines.flow.MutableStateFlow
 
-class ContentViewModel(application: Application) : AndroidViewModel(application), TextToSpeech.OnInitListener {
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
+@HiltViewModel
+class ContentViewModel @Inject constructor(
+    application: Application,
     private val repository: ProjectRepository
-    val allProjects = MutableStateFlow<List<ProjectEntity>>(emptyList())
+) : AndroidViewModel(application) {
+
+
+    val allProjects: StateFlow<List<ProjectEntity>> = repository.allProjects
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -40,87 +45,40 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
     private val _speechText = MutableStateFlow("")
     val speechText = _speechText.asStateFlow()
 
-    private var tts: TextToSpeech? = null
-    private var speechRecognizer: SpeechRecognizer? = null
-    
+    private var voiceManager: VoiceAssistantManager? = null
     init {
-        val db = AppDatabase.getDatabase(application)
-        repository = ProjectRepository(db.projectDao())
-        
         viewModelScope.launch {
-            repository.allProjects.collect { projects ->
-                if (projects.isEmpty()) {
-                    repository.insertProject(ProjectEntity(topic = "معرفی تکنولوژی‌های آینده", shortDescription = "علاقه‌مندان", platform = "یوتیوب", resultText = "متن استراتژی هوشمند", generateScript = true, generateCaption = true, generateInfographic = true, generateImage = true, generateBgm = true))
-                    repository.insertProject(ProjectEntity(topic = "راهنمای خرید لپ‌تاپ", shortDescription = "دانشجویان", platform = "اینستاگرام", resultText = "نکات مهم قبل از خرید", generateScript = true, generateCaption = true, generateInfographic = true, generateImage = true, generateVoice = true))
-                } else {
-                    allProjects.value = projects
-                }
+            val projects = repository.getAllProjectsSync()
+            if (projects.isEmpty()) {
+                repository.insertProject(ProjectEntity(topic = "معرفی تکنولوژی‌های آینده", shortDescription = "علاقه‌مندان", platform = "یوتیوب", resultText = "متن استراتژی هوشمند", generateScript = true, generateCaption = true, generateInfographic = true, generateImage = true, generateBgm = true))
+                repository.insertProject(ProjectEntity(topic = "راهنمای خرید لپ‌تاپ", shortDescription = "دانشجویان", platform = "اینستاگرام", resultText = "نکات مهم قبل از خرید", generateScript = true, generateCaption = true, generateInfographic = true, generateImage = true, generateVoice = true))
             }
         }
         
-        tts = TextToSpeech(application, this)
-        setupSpeechRecognizer()
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts?.language = Locale.US
-            tts?.setOnUtteranceProgressListener(object: UtteranceProgressListener() {
-                 override fun onStart(utteranceId: String?) {}
-                 override fun onDone(utteranceId: String?) {}
-                 @Deprecated("Deprecated in Java", ReplaceWith("Unit"))
-                 override fun onError(utteranceId: String?) {}
-            })
-        }
-    }
-
-    private fun setupSpeechRecognizer() {
-        if (SpeechRecognizer.isRecognitionAvailable(getApplication())) {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplication())
-            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-                override fun onReadyForSpeech(params: Bundle?) { _voiceState.value = VoiceState.Listening }
-                override fun onBeginningOfSpeech() {}
-                override fun onRmsChanged(rmsdB: Float) {}
-                override fun onBufferReceived(buffer: ByteArray?) {}
-                override fun onEndOfSpeech() { _voiceState.value = VoiceState.Processing }
-                override fun onError(error: Int) {
-                    _voiceState.value = VoiceState.Error("Voice recognition error: $error")
-                }
-                override fun onResults(results: Bundle?) {
-                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    if (!matches.isNullOrEmpty()) {
-                        val text = matches[0]
-                        _speechText.value = text
-                        handleVoiceCommand(text)
-                    } else {
-                        _voiceState.value = VoiceState.Idle
-                    }
-                }
-                override fun onPartialResults(partialResults: Bundle?) {}
-                override fun onEvent(eventType: Int, params: Bundle?) {}
-            })
-        }
+        voiceManager = VoiceAssistantManager(
+            context = application,
+            onStateChange = { state -> _voiceState.value = state },
+            onTextRecognized = { text ->
+                _speechText.value = text
+                handleVoiceCommand(text)
+            }
+        )
     }
 
     fun startListening() {
         _speechText.value = ""
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        }
-        speechRecognizer?.startListening(intent)
+        voiceManager?.startListening()
     }
 
     fun stopListening() {
-        speechRecognizer?.stopListening()
-        _voiceState.value = VoiceState.Idle
+        voiceManager?.stopListening()
     }
 
     private fun handleVoiceCommand(text: String) {
         viewModelScope.launch {
             _voiceState.value = VoiceState.Processing
             try {
-                val prompt = "You are an AI assistant in a Content Studio. Respond briefly to the following query: \$text"
+                val prompt = "You are an AI assistant in a Content Studio. Respond briefly to the following query: $text"
                 val response = generateGeminiResponse(prompt)
                 _voiceState.value = VoiceState.Success(response)
                 speak(response)
@@ -131,20 +89,11 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun speak(text: String) {
-        // Chunking for long texts
-        val maxLen = TextToSpeech.getMaxSpeechInputLength()
-        if (text.length > maxLen) {
-            val chunks = text.chunked(maxLen)
-            chunks.forEachIndexed { index, chunk ->
-                tts?.speak(chunk, if(index == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD, null, "chunk_\$index")
-            }
-        } else {
-            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "full_text")
-        }
+        voiceManager?.speak(text)
     }
 
     fun stopSpeaking() {
-        tts?.stop()
+        voiceManager?.stopSpeaking()
     }
 
     fun generateContentStrategy(project: ProjectEntity) {
@@ -152,41 +101,34 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
             _uiState.value = UiState.Loading
             try {
                 val prompt = buildString {
-                    append("به عنوان یک دستیار ارشد و استراتژیست محتوا، یک استراتژی تولید محتوای جامع بنویس.\\n")
-                    append("موضوع: \${project.topic}\\n")
-                    if (project.shortDescription.isNotBlank()) append("توضیح کوتاه: \${project.shortDescription}\\n")
-                    if (project.sourceInfo.isNotBlank()) append("منبع یا اطلاعات تکمیلی: \${project.sourceInfo}\\n")
-                    append("پلتفرم: \${project.platform}\\n")
-                    append("سبک بصری: \${project.visualStyle}\\n")
-                    if (project.generateScript) append("لطفاً یک اسکریپت یا سناریوی دقیق برای ویدیو/پادکست بنویس و لحن آن \${project.voiceTone} باشد.\\n")
-                    if (project.generateCaption) append("کپشن‌های جذاب و هشتگ‌های ترند و مرتبط آماده کن.\\n")
-                    if (project.generateInfographic) append("یک فلوچارت متنی مرحله به مرحله برای نحوه اجرای این ایده بنویس.\\n")
-                    append("پاسخ حتما به زبان \${project.language} باشد.")
+                    append("به عنوان یک دستیار ارشد و استراتژیست محتوا، یک استراتژی تولید محتوای جامع بنویس.\n")
+                    append("موضوع: ${project.topic}\n")
+                    if (project.shortDescription.isNotBlank()) append("توضیح کوتاه: ${project.shortDescription}\n")
+                    if (project.sourceInfo.isNotBlank()) append("منبع یا اطلاعات تکمیلی: ${project.sourceInfo}\n")
+                    append("پلتفرم: ${project.platform}\n")
+                    append("سبک بصری: ${project.visualStyle}\n")
+                    if (project.generateScript) append("لطفاً یک اسکریپت یا سناریوی دقیق برای ویدیو/پادکست بنویس و لحن آن ${project.voiceTone} باشد.\n")
+                    if (project.generateCaption) append("کپشن‌های جذاب و هشتگ‌های ترند و مرتبط آماده کن.\n")
+                    if (project.generateInfographic) append("علاوه بر اسکریپت، یک فلوچارت هم برای نحوه اجرای این ایده نیاز دارم.\n")
+                    append("پاسخ حتما به زبان ${project.language} باشد.\n")
+                    append("خیلی مهم: خروجی تو باید حتما و فقط یک آبجکت JSON معتبر باشد و هیچ متن اضافه‌ای قبل یا بعد از آن نباشد. ساختار JSON باید اینگونه باشد:\n")
+                    append("{\n  \"script\": \"متن کامل اسکریپت و کپشن در اینجا\",\n  \"flowchart\": [\"قدم اول\", \"قدم دوم\", \"قدم سوم\"]\n}")
                  }
                 
                 val result = try {
                     generateGeminiResponse(prompt)
                 } catch (e: Exception) {
-                    // Fallback to a beautifully mocked response if API key is missing or fails
                     """
-                    **عنوان: ایده محتوایی شما**
-                    
-                    **۱. سناریو / اسکریپت:**
-                    سلام بچه‌ها! امروز می‌خوام درباره یه موضوع خیلی جذاب (\${project.topic}) باهاتون صحبت کنم. 
-                    - معرفی سریع در ۳ ثانیه
-                    - ارائه اطلاعات اصلی به مخاطبین
-                    - دعوت به اقدام (CTA)
-                    
-                    **۲. کپشن:**
-                    آیا تا به حال به \${project.topic} فکر کرده‌اید؟ 🤔 در این پست به بررسی کامل آن پرداخته‌ایم!
-                    #\${project.topic.replace(" ", "_")} #تولید_محتوا #ترند
-                    
-                    **۳. فلوچارت استراتژی:**
-                    - ایده پردازی اولیه و تحقیق
-                    - نگارش و بهینه‌سازی سناریو
-                    - ضبط کلیپ و نریشن
-                    - تدوین و اضافه کردن افکت‌های بصری
-                    - انتشار و تعامل با مخاطب
+                    {
+                      "script": "سلام بچه‌ها! امروز می‌خوام درباره یه موضوع خیلی جذاب (${project.topic}) باهاتون صحبت کنم...\n\n#${project.topic.replace(" ", "_")} #تولید_محتوا #ترند",
+                      "flowchart": [
+                        "ایده پردازی اولیه و تحقیق",
+                        "نگارش و بهینه‌سازی سناریو",
+                        "ضبط کلیپ و نریشن",
+                        "تدوین و اضافه کردن افکت‌های بصری",
+                        "انتشار و تعامل با مخاطب"
+                      ]
+                    }
                     """.trimIndent()
                 }
                 
@@ -214,11 +156,8 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private suspend fun generateGeminiResponse(prompt: String): String = withContext(Dispatchers.IO) {
-         val request = GenerateContentRequest(
-            contents = listOf(Content(parts = listOf(Part(text = prompt)), role = "user"))
-         )
-         val response = RetrofitClient.service.generateContent(request = request)
-         response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text ?: "No response from AI."
+         val response = com.example.network.GeminiClient.generativeModel.generateContent(prompt)
+         response.text ?: "No response from AI."
     }
 
     fun clearState() {
@@ -230,9 +169,7 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
 
     override fun onCleared() {
         super.onCleared()
-        tts?.stop()
-        tts?.shutdown()
-        speechRecognizer?.destroy()
+        voiceManager?.destroy()
     }
 }
 

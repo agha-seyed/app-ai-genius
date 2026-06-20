@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.roborazzi)
   alias(libs.plugins.secrets)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.hilt)
 }
 
 android {
@@ -92,7 +93,7 @@ dependencies {
   implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.room.runtime)
-  // implementation(libs.coil.compose)
+  implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
   // implementation(libs.firebase.ai)
   implementation(libs.kotlinx.coroutines.android)
@@ -104,6 +105,10 @@ dependencies {
   implementation(libs.retrofit)
   implementation(libs.retrofit.converter.serialization)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.generativeai)
+  implementation(libs.hilt.android)
+  "ksp"(libs.hilt.compiler)
+  implementation(libs.androidx.hilt.navigation.compose)
   testImplementation(libs.androidx.compose.ui.test.junit4)
   testImplementation(libs.androidx.core)
   testImplementation(libs.androidx.junit)

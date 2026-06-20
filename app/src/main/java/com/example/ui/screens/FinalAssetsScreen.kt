@@ -30,6 +30,7 @@ import com.example.ui.ContentViewModel
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import kotlinx.coroutines.delay
+import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +53,7 @@ fun FinalAssetsScreen(
                 title = { Text(stringResource(R.string.step3_title), color = GeoTextPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoCyan)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoAmberLight)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -70,16 +71,30 @@ fun FinalAssetsScreen(
                             // Column 1 (Left): Audio Player
                             if (p.generateBgm || p.generateVoice) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(stringResource(R.string.audio_player_title), style = MaterialTheme.typography.titleMedium, color = GeoCyan)
+                                    Text(stringResource(R.string.audio_player_title), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight)
                                     Spacer(modifier = Modifier.height(16.dp))
                                     
                                     var isPlaying by remember { mutableStateOf(false) }
+                                    
+                                    val scriptText = remember(p.resultText) {
+                                        val rawText = p.resultText ?: ""
+                                        val cleanText = rawText.removePrefix("```json").removePrefix("```").removeSuffix("```").trim()
+                                        try {
+                                            org.json.JSONObject(cleanText).optString("script", cleanText)
+                                        } catch(e: Exception) {
+                                            cleanText
+                                        }
+                                    }
+                                    
+                                    DisposableEffect(Unit) {
+                                        onDispose { viewModel.stopSpeaking() }
+                                    }
                                     
                                     GlassCard(cornerRadius = 32.dp) {
                                         Column(modifier = Modifier.fillMaxWidth().padding(24.dp)) {
                                             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                                                 Box(
-                                                    modifier = Modifier.size(64.dp).clip(CircleShape).background(Brush.linearGradient(listOf(GeoAmber, GeoEmerald))),
+                                                    modifier = Modifier.size(64.dp).clip(CircleShape).background(Brush.linearGradient(listOf(GeoAmber, GeoGold))),
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     Icon(Icons.Filled.MusicNote, "Audio", tint = GeoBackground, modifier = Modifier.size(32.dp))
@@ -95,8 +110,15 @@ fun FinalAssetsScreen(
                                             Spacer(Modifier.height(24.dp))
                                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                                                 IconButton(
-                                                    onClick = { isPlaying = !isPlaying },
-                                                    modifier = Modifier.size(72.dp).background(if(isPlaying) GeoGlassBorder else GeoCyan, CircleShape)
+                                                    onClick = { 
+                                                        isPlaying = !isPlaying
+                                                        if (isPlaying) {
+                                                            viewModel.speak(scriptText)
+                                                        } else {
+                                                            viewModel.stopSpeaking()
+                                                        }
+                                                    },
+                                                    modifier = Modifier.size(72.dp).background(if(isPlaying) GeoGlassBorder else GeoAmberLight, CircleShape)
                                                 ) {
                                                     Icon(if(isPlaying) Icons.Filled.Stop else Icons.Filled.PlayArrow, "Play/Stop", tint = if(isPlaying) GeoTextPrimary else GeoBackground, modifier = Modifier.size(40.dp))
                                                 }
@@ -109,30 +131,32 @@ fun FinalAssetsScreen(
                             // Column 2 (Right): Image Gallery
                             if (p.generateImage || p.generateVideo) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(stringResource(R.string.gallery_title), style = MaterialTheme.typography.titleMedium, color = GeoCyan)
+                                    Text(stringResource(R.string.gallery_title), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight)
                                     Spacer(modifier = Modifier.height(16.dp))
                                     
                                     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
                                         // Main Poster
                                         Box(modifier = Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
-                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Icon(Icons.Filled.Image, "Image 1", tint = GeoCyan.copy(alpha=0.5f), modifier = Modifier.size(80.dp))
-                                                Spacer(Modifier.height(16.dp))
-                                                Text("تصویر پایه", color = GeoTextSecondary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                            }
-                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoCyan, CircleShape).size(48.dp)) {
+                                            AsyncImage(
+                                                model = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(p.topic + " high quality cinematic poster")}",
+                                                contentDescription = "Main Poster",
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                                            )
+                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoAmberLight, CircleShape).size(48.dp)) {
                                                 Icon(Icons.Filled.Download, "Download", tint = GeoBackground, modifier = Modifier.size(24.dp))
                                             }
                                         }
                                         
                                         // Cover Image
                                         Box(modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
-                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Icon(Icons.Filled.Image, "Image 2", tint = GeoEmerald.copy(alpha=0.5f), modifier = Modifier.size(64.dp))
-                                                Spacer(Modifier.height(16.dp))
-                                                Text("تصویر دوم", color = GeoTextSecondary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                            }
-                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoEmerald, CircleShape).size(48.dp)) {
+                                            AsyncImage(
+                                                model = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(p.topic + " youtube thumbnail cover")}",
+                                                contentDescription = "Cover Image",
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                                            )
+                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoGold, CircleShape).size(48.dp)) {
                                                 Icon(Icons.Filled.Download, "Download", tint = GeoBackground, modifier = Modifier.size(24.dp))
                                             }
                                         }
@@ -145,7 +169,7 @@ fun FinalAssetsScreen(
                     Spacer(modifier = Modifier.height(80.dp))
                 }
             } else {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = GeoCyan)
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = GeoAmberLight)
             }
         }
     }
@@ -164,7 +188,7 @@ fun Waveform(isPlaying: Boolean) {
                     repeatMode = RepeatMode.Reverse
                 ), label = ""
             )
-            Box(modifier = Modifier.width(4.dp).height(height.dp).clip(CircleShape).background(if(i % 5 == 0) GeoCyan else GeoAmber.copy(alpha=0.6f)))
+            Box(modifier = Modifier.width(4.dp).height(height.dp).clip(CircleShape).background(if(i % 5 == 0) GeoAmberLight else GeoAmber.copy(alpha=0.6f)))
         }
     }
 }

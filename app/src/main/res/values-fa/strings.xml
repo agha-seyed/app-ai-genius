@@ -4,6 +4,25 @@
     <!-- General -->
     <string name="next_step">مرحله بعد</string>
     <string name="generate_content">تولید محتوا</string>
+    
+    <!-- Dashboard -->
+    <string name="dash_title">استودیو هوشمند</string>
+    <string name="dash_subtitle">موتور هوش مصنوعی محتوا</string>
+    <string name="dash_recent">پروژه‌های اخیر</string>
+    <string name="dash_welcome">به استودیو هوشمند خوش‌آمدید</string>
+    <string name="dash_login_desc">برای همگام‌سازی پروژه‌ها و امکانات پیشرفته، وارد شوید.</string>
+    <string name="dash_login_btn">ورود با حساب گوگل</string>
+    <string name="dash_create_now">همین حالا بسازید</string>
+    <string name="nav_home">خانه</string>
+    <string name="nav_create">تولید</string>
+    <string name="nav_stats">آمار</string>
+    <string name="nav_settings">تنظیمات</string>
+    <string name="template_ig">سناریو اینستاگرام فروشگاهی</string>
+    <string name="template_yt">اسکریپت یوتیوب بررسی تکنولوژی</string>
+    <string name="template_tk">ایده ویدیوی وایرال تیک‌تاک</string>
+    
+    <string name="error_prefix">خطا:</string>
+    <string name="error_unknown">خطای ناشناخته رخ داد. لطفاً اتصال اینترنت خود را بررسی کنید.</string>
 
     <!-- Create Project (Step 1) -->
     <string name="step1_title">پروژه جدید</string>
@@ -11,33 +30,33 @@
     <string name="topic_label">موضوع اصلی</string>
     <string name="short_desc_label">توضیح کوتاه</string>
     <string name="source_info_label">منبع یا اطلاعات تکمیلی</string>
-    <string name="platform_label">پلتفرم (اینستاگرام، تیک‌تاک و...)</string>
-    <string name="visual_style_label">سبک بصری (سینماتیک، مینیمال و...)</string>
+    <string name="platform_label">پلتفرم (اینستاگرام، تیک‌تاک و ...)</string>
+    <string name="visual_style_label">سبک بصری (سینمایی، مینیمال و ...)</string>
 
     <string name="section_studio_audio">استودیو و صدا</string>
-    <string name="gen_voice">نریشن صوتی</string>
+    <string name="gen_voice">گویندگی صوتی (AI Voice)</string>
     <string name="gen_bgm">موسیقی پس‌زمینه</string>
     <string name="voice_gender">جنسیت گوینده (آقا/خانم)</string>
-    <string name="voice_tone">لحن (آرام، حماسی، دوستانه و...)</string>
+    <string name="voice_tone">لحن (حماسی، دوستانه و ...)</string>
 
-    <string name="section_visual_media">بصری و مدیا</string>
-    <string name="gen_image">تولید تصویر</string>
-    <string name="frame_count">تعداد فریم (۴، ۵، ۱۰، ۱۵)</string>
-    <string name="gen_video">تولید ویدیو و تیزر</string>
-    <string name="gen_animated_teaser">تولید تیزر متحرک</string>
-    <string name="google_api_note">استفاده از API گوگل (رایگان)</string>
-    <string name="video_style">سبک ویدیو (سینماتیک، انیمیشن، ولاگ)</string>
+    <string name="section_visual_media">تصویر و مدیا</string>
+    <string name="gen_image">تولید تصاویر</string>
+    <string name="frame_count">تعداد فریم (۴، ۵، ۱۰)</string>
+    <string name="gen_video">تولید ویدیو / تیزر</string>
+    <string name="gen_animated_teaser">تیزر متحرک (Animated)</string>
+    <string name="google_api_note">از API رایگان گوگل استفاده می‌شود</string>
+    <string name="video_style">سبک ویدیو (سینمایی، انیمیشن، ولاگ)</string>
 
     <string name="section_infographic">اینفوگرافیک</string>
     <string name="gen_infographic_smart">اینفوگرافیک هوشمند</string>
     <string name="lang_selection">زبان (فارسی/انگلیسی)</string>
     
     <string name="gen_script">تولید اسکریپت / سناریو</string>
-    <string name="gen_caption">تولید کپشن و هشتگ</string>
+    <string name="gen_caption">تولید کپشن و هشتگ‌ها</string>
 
     <!-- Detail Screen -->
-    <string name="step2_title">بازبینی استراتژی</string>
-    <string name="refine">بهینه‌سازی متن</string>
+    <string name="step2_title">بررسی استراتژی</string>
+    <string name="refine">بهبود متن</string>
     <string name="flowchart_title">فلوچارت استراتژیک</string>
     
     <!-- Final Assets Screen -->

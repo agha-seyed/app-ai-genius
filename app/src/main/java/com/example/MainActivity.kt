@@ -35,7 +35,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.platform.LocalLayoutDirection
 import android.content.res.Configuration
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.hilt.navigation.compose.hiltViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,26 +47,24 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             var currentLang by remember { mutableStateOf("fa") }
             
-            val localeConfig = remember(currentLang) {
+            val locale = java.util.Locale(currentLang)
+            val localizedContext = remember(currentLang) {
                 val config = Configuration(context.resources.configuration)
-                val locale = java.util.Locale(currentLang)
-                java.util.Locale.setDefault(locale)
                 config.setLocale(locale)
                 config.setLayoutDirection(locale)
-                @Suppress("DEPRECATION")
-                context.resources.updateConfiguration(config, context.resources.displayMetrics)
-                config
+                context.createConfigurationContext(config)
             }
             
-            val direction = if (localeConfig.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL) LayoutDirection.Rtl else LayoutDirection.Ltr
+            val direction = if (localizedContext.resources.configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL) LayoutDirection.Rtl else LayoutDirection.Ltr
 
             CompositionLocalProvider(
-                LocalConfiguration provides localeConfig,
+                LocalContext provides localizedContext,
+                LocalConfiguration provides localizedContext.resources.configuration,
                 LocalLayoutDirection provides direction
             ) {
                 MyApplicationTheme {
                     val navController = rememberNavController()
-                    val viewModel: ContentViewModel = viewModel()
+                    val viewModel: ContentViewModel = hiltViewModel()
 
                     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                         Box(modifier = Modifier.fillMaxSize()) {
@@ -141,7 +142,7 @@ fun VoiceAssistantOverlay(viewModel: ContentViewModel, modifier: Modifier = Modi
                             is VoiceState.Listening -> "Listening..."
                             is VoiceState.Processing -> "Thinking..."
                             is VoiceState.Success -> (voiceState as VoiceState.Success).response
-                            is VoiceState.Error -> (voiceState as VoiceState.Error).message
+                            is VoiceState.Error -> androidx.compose.ui.res.stringResource(com.example.R.string.error_unknown)
                             else -> ""
                         },
                         color = Color.White,

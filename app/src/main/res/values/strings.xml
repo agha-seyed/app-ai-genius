@@ -4,6 +4,25 @@
     <!-- General -->
     <string name="next_step">Next Step</string>
     <string name="generate_content">Generate Content</string>
+    
+    <!-- Dashboard -->
+    <string name="dash_title">Smart Studio</string>
+    <string name="dash_subtitle">AI Content Engine</string>
+    <string name="dash_recent">Recent Projects</string>
+    <string name="dash_welcome">Welcome to Smart Studio</string>
+    <string name="dash_login_desc">Log in for cloud sync and advanced features.</string>
+    <string name="dash_login_btn">Sign in with Google</string>
+    <string name="dash_create_now">Create Now</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_settings">Settings</string>
+    <string name="template_ig">IG Store Scenario</string>
+    <string name="template_yt">YT Tech Script</string>
+    <string name="template_tk">TikTok Viral Idea</string>
+    
+    <string name="error_prefix">Error:</string>
+    <string name="error_unknown">Unknown error occurred. Please check your connection.</string>
 
     <!-- Create Project (Step 1) -->
     <string name="step1_title">New Project</string>

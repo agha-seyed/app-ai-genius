@@ -46,13 +46,28 @@ fun DetailScreen(
 ) {
     var project by remember { mutableStateOf<ProjectEntity?>(null) }
     var textContent by remember { mutableStateOf("") }
+    var flowchartSteps by remember { mutableStateOf<List<String>>(emptyList()) }
     
     // Actually we should listen to the flow if it's updated, but simple state is fine
     LaunchedEffect(projectId) {
         viewModel.allProjects.collect { projects ->
             projects.find { it.id == projectId }?.let { 
                 project = it
-                textContent = it.resultText ?: ""
+                try {
+                    val rawText = it.resultText ?: ""
+                    val cleanText = rawText.removePrefix("```json").removePrefix("```").removeSuffix("```").trim()
+                    val json = org.json.JSONObject(cleanText)
+                    textContent = json.optString("script", cleanText)
+                    val array = json.optJSONArray("flowchart")
+                    val steps = mutableListOf<String>()
+                    if (array != null) {
+                        for (i in 0 until array.length()) steps.add(array.getString(i))
+                    }
+                    flowchartSteps = steps
+                } catch (e: Exception) {
+                    val raw = it.resultText ?: ""
+                    textContent = raw.replace(Regex("[\"\\{\\}\\[\\]]"), "").trim()
+                }
             }
         }
     }
@@ -74,7 +89,7 @@ fun DetailScreen(
                 title = { Text(stringResource(R.string.step2_title), color = GeoTextPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoCyan)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoAmberLight)
                     }
                 },
                  actions = {
@@ -95,7 +110,7 @@ fun DetailScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     contentPadding = PaddingValues()
                 ) {
-                    Box(modifier = Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(GeoEmerald, GeoCyan))), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(GeoGold, GeoAmberLight))), contentAlignment = Alignment.Center) {
                         Text(stringResource(R.string.step3_title), color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                     }
                 }
@@ -108,7 +123,7 @@ fun DetailScreen(
                     // Refine Card
                     GlassCard(cornerRadius = 16.dp) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                            Text(stringResource(R.string.gen_script), color = GeoEmerald, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.gen_script), color = GeoGold, fontWeight = FontWeight.Bold)
                             IconButton(onClick = { viewModel.refineContent(textContent) }) {
                                 Icon(Icons.Filled.AutoFixHigh, "Refine", tint = GeoAmber)
                             }
@@ -128,16 +143,16 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     if (project!!.generateInfographic) {
-                        Text(stringResource(R.string.flowchart_title), color = GeoCyan, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.flowchart_title), color = GeoAmberLight, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
                         Box(modifier = Modifier.fillMaxWidth().height(400.dp).clip(RoundedCornerShape(16.dp)).background(GeoBlackTranslucent)) {
-                            FlowchartCanvas(textContent)
+                            FlowchartCanvas(flowchartSteps)
                         }
                     }
                     Spacer(modifier = Modifier.height(80.dp))
                 }
             } else {
-                CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center), color = GeoCyan)
+                CircularProgressIndicator(modifier = Modifier.align(androidx.compose.ui.Alignment.Center), color = GeoAmberLight)
             }
         }
     }
@@ -145,15 +160,12 @@ fun DetailScreen(
 
 @OptIn(androidx.compose.ui.text.ExperimentalTextApi::class)
 @Composable
-fun FlowchartCanvas(content: String) {
+fun FlowchartCanvas(nodes: List<String>) {
     var scale by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val textMeasurer = rememberTextMeasurer()
 
-    val nodes = remember(content) {
-        val lines = content.split("\\n").filter { it.isNotBlank() && it.length > 5 }
-        if (lines.isEmpty()) listOf("No Content") else lines.take(5)
-    }
+    val displayNodes = if (nodes.isEmpty()) listOf("No Content") else nodes.take(5)
 
     Canvas(
         modifier = Modifier
@@ -171,13 +183,13 @@ fun FlowchartCanvas(content: String) {
         val startX = (size.width - nodeWidth) / 2
         var currentY = 100f
 
-        nodes.forEachIndexed { index, text ->
+        displayNodes.forEachIndexed { index, text ->
             val rectOffset = Offset(startX + offset.x * scale, currentY * scale + offset.y)
             
             if (index > 0) {
                 val prevY = (currentY - verticalSpacing) * scale + offset.y + (nodeHeight * scale)
                 drawLine(
-                    color = GeoCyan,
+                    color = GeoAmberLight,
                     start = Offset(rectOffset.x + (nodeWidth * scale) / 2, prevY),
                     end = Offset(rectOffset.x + (nodeWidth * scale) / 2, rectOffset.y),
                     strokeWidth = 4f * scale

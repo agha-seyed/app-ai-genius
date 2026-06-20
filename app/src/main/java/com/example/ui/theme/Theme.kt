@@ -18,15 +18,15 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme =
   darkColorScheme(
-    primary = GeoCyan,
+    primary = GeoAmberLight,
     onPrimary = GeoBackground,
     primaryContainer = GeoSurface,
-    onPrimaryContainer = GeoCyan,
+    onPrimaryContainer = GeoAmberLight,
     secondary = GeoAmber,
     onSecondary = GeoBackground,
-    secondaryContainer = GeoEmeraldDark,
+    secondaryContainer = GeoOrange,
     onSecondaryContainer = GeoTextPrimary,
-    tertiary = GeoEmerald,
+    tertiary = GeoGold,
     onTertiary = GeoBackground,
     background = GeoBackground,
     onBackground = GeoTextPrimary,

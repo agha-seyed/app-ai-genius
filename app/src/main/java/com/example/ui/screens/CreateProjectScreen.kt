@@ -67,7 +67,7 @@ fun CreateProjectScreen(
                 onNavigateToDetail(state.projectId)
             }
             is UiState.Error -> {
-                Toast.makeText(context, "Error: \${state.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.error_unknown), Toast.LENGTH_LONG).show()
                 viewModel.clearState()
             }
             else -> {}
@@ -80,7 +80,7 @@ fun CreateProjectScreen(
                 title = { Text(stringResource(R.string.step1_title), color = GeoTextPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoCyan)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = GeoAmberLight)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -118,7 +118,7 @@ fun CreateProjectScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     contentPadding = PaddingValues()
                 ) {
-                    Box(modifier = Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(GeoEmerald, GeoCyan))), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(GeoGold, GeoAmberLight))), contentAlignment = Alignment.Center) {
                         if (uiState is UiState.Loading) {
                             CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                         } else {
@@ -137,7 +137,7 @@ fun CreateProjectScreen(
             // Section 1: Basic Info
             GlassCard(cornerRadius = 16.dp) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(stringResource(R.string.section_basic_info), style = MaterialTheme.typography.titleMedium, color = GeoCyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.section_basic_info), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight, fontWeight = FontWeight.Bold)
                     
                     AppTextField(value = topic, onValueChange = { topic = it }, label = stringResource(R.string.topic_label))
                     AppTextField(value = shortDescription, onValueChange = { shortDescription = it }, label = stringResource(R.string.short_desc_label))
@@ -150,7 +150,7 @@ fun CreateProjectScreen(
             // Section 2: Studio & Audio
             GlassCard(cornerRadius = 16.dp) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(stringResource(R.string.section_studio_audio), style = MaterialTheme.typography.titleMedium, color = GeoCyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.section_studio_audio), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight, fontWeight = FontWeight.Bold)
                     
                     SettingsSwitch(stringResource(R.string.gen_voice), genVoice) { genVoice = it }
                     SettingsSwitch(stringResource(R.string.gen_bgm), genBgm) { genBgm = it }
@@ -165,7 +165,7 @@ fun CreateProjectScreen(
             // Section 3: Visual & Media
             GlassCard(cornerRadius = 16.dp) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(stringResource(R.string.section_visual_media), style = MaterialTheme.typography.titleMedium, color = GeoCyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.section_visual_media), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight, fontWeight = FontWeight.Bold)
                     
                     SettingsSwitch(stringResource(R.string.gen_image), genImage) { genImage = it }
                     if (genImage) {
@@ -186,7 +186,7 @@ fun CreateProjectScreen(
             // Section 4: Infographic
             GlassCard(cornerRadius = 16.dp) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(stringResource(R.string.section_infographic), style = MaterialTheme.typography.titleMedium, color = GeoCyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.section_infographic), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight, fontWeight = FontWeight.Bold)
                     
                     SettingsSwitch(stringResource(R.string.gen_infographic_smart), genInfographic) { genInfographic = it }
                     AppTextField(value = language, onValueChange = { language = it }, label = stringResource(R.string.lang_selection))
@@ -207,7 +207,7 @@ fun AppTextField(value: String, onValueChange: (String) -> Unit, label: String) 
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = GeoBlackTranslucent, unfocusedContainerColor = GeoBlackTranslucent,
-            focusedIndicatorColor = GeoCyan, unfocusedIndicatorColor = GeoGlassBorder,
+            focusedIndicatorColor = GeoAmberLight, unfocusedIndicatorColor = GeoGlassBorder,
             focusedTextColor = GeoTextPrimary, unfocusedTextColor = GeoTextPrimary
         ),
         singleLine = true
@@ -224,7 +224,7 @@ fun SettingsSwitch(label: String, checked: Boolean, onCheckedChange: (Boolean) -
         Text(label, color = GeoTextPrimary, style = MaterialTheme.typography.bodyMedium)
         Switch(
             checked = checked, onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedThumbColor = GeoBackground, checkedTrackColor = GeoEmerald)
+            colors = SwitchDefaults.colors(checkedThumbColor = GeoBackground, checkedTrackColor = GeoGold)
         )
     }
 }
