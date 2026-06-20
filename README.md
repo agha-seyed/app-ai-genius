@@ -53,3 +53,111 @@
 <p align="center">
   <b>توسعه یافته با نوآوری و قدرت توسط <a href="#">تیم ویرانگر (Wirangar)</a></b>
 </p>
+
+---
+
+<h1 align="center">Smart Studio AI</h1>
+
+<p align="center">
+  <strong>A powerful AI assistant for content ideation, generation, and management</strong>
+</p>
+
+## 🚀 Introduction
+**Smart Studio** is an advanced Android application designed to facilitate the content creation process for social media platforms (like Instagram, TikTok, YouTube, etc.). By leveraging advanced AI models (such as **Google Gemini**), this software acts as an all-around creative assistant right by your side.
+From writing engaging scripts to drawing strategic flowcharts, generating AI images, and converting text to speech (TTS), everything is provided in this application with the highest quality and in a highly modern user interface.
+
+## 👑 Developer: Wirangar Team
+This software was fully designed and developed with pride by the **Wirangar Programming and AI Team**.
+Our main goal at Wirangar has been to combine modern UI/UX design with optimized code to create a tool that meets the real needs of content creators with incredible speed and precision.
+
+## 🌟 Features & Capabilities
+The work done in this project and the features added include:
+
+- **🤖 Advanced Text Generation:** Receives keywords, tone, and platform from the user and builds structured video scripts and scenarios using AI.
+- **🎨 AI Image Generation:** Connects to AI image APIs to understand user context and automatically generate attractive and relevant images for the project.
+- **🎙️ Text-to-Speech (TTS):** Reads the written scenarios and converts them to audio files using Android's native text-to-speech engine.
+- **📊 Strategic Flowcharts:** Extracts step-by-step execution phases of the scenario and automatically draws interactive flowcharts in the app interface.
+- **🗣️ Smart Voice Assistant (Voice Overlay):** A floating voice assistant available everywhere in the app. It records user commands via microphone, sends them to AI, and returns the responses.
+- **🌐 Full Localization Support (Multilingual):** Ability to switch the app language between Persian and English instantly, along with automatic Right-to-Left (RTL) support for all elements.
+- **💾 Local Project Storage:** Uses a powerful database to store all generated projects for future offline access.
+- **📱 Modern UI (Glassmorphism):** Uses glass-like elements, eye-catching neon color schemes, and attractive gradients using Jetpack Compose technology.
+
+## 🛠️ Technologies & Architecture
+The Wirangar team has used the most up-to-date Android development tools to build this application:
+- **Programming Language:** Kotlin
+- **UI Toolkit:** Jetpack Compose
+- **Architecture:** MVVM + StateFlow
+- **Dependency Injection:** Dagger Hilt
+- **Database Management:** Room Database
+- **Network Communications:** Retrofit & Moshi
+- **Image Management:** Coil-Compose
+- **AI Services:** Google Gemini API
+
+## ⚙️ Installation & Setup Guide
+To run this project on your system, follow these steps:
+1. Open [Android Studio](https://developer.android.com/studio) and `Open` the project folder.
+2. In the root directory of the project (where the `build.gradle.kts` file is located), create a file named `.env`.
+3. Place your dedicated Gemini API key in it:
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+4. Sync the project and then Build & Run it on your physical device or Emulator.
+
+---
+<p align="center">
+  <b>Developed with innovation and power by the <a href="#">Wirangar Team</a></b>
+</p>
+
+---
+
+<h1 align="center">Smart Studio AI (Italiano)</h1>
+
+<p align="center">
+  <strong>Un potente assistente AI per l'ideazione, la generazione e la gestione dei contenuti</strong>
+</p>
+
+## 🚀 Introduzione
+**Smart Studio** è un'applicazione Android avanzata progettata per facilitare il processo di creazione di contenuti per le piattaforme di social media (come Instagram, TikTok, YouTube, ecc.). Sfruttando modelli AI avanzati (come **Google Gemini**), questo software agisce come un assistente creativo a tutto tondo sempre al tuo fianco.
+Dalla scrittura di script coinvolgenti al disegno di diagrammi di flusso strategici, dalla generazione di immagini AI alla conversione del testo in voce (TTS), tutto è fornito in questa applicazione con la massima qualità e in un'interfaccia utente altamente moderna.
+
+## 👑 Sviluppatore: Team Wirangar
+Questo software è stato interamente progettato e sviluppato con orgoglio dal **Team di Programmazione e AI Wirangar**.
+Il nostro obiettivo principale in Wirangar è stato quello di combinare il design UI/UX moderno con un codice ottimizzato per creare uno strumento che soddisfi le reali esigenze dei creatori di contenuti con una velocità e precisione incredibili.
+
+## 🌟 Funzionalità e Capacità
+Il lavoro svolto in questo progetto e le funzionalità aggiunte includono:
+
+- **🤖 Generazione Avanzata di Testi:** Riceve parole chiave, tono e piattaforma dall'utente e costruisce script video strutturati e scenari utilizzando l'IA.
+- **🎨 Generazione di Immagini AI:** Si connette alle API di immagini AI per comprendere il contesto dell'utente e generare automaticamente immagini attraenti e pertinenti per il progetto.
+- **🎙️ Sintesi Vocale (TTS):** Legge gli scenari scritti e li converte in file audio utilizzando il motore nativo text-to-speech di Android.
+- **📊 Diagrammi di Flusso Strategici:** Estrae le fasi di esecuzione passo-passo dello scenario e disegna automaticamente diagrammi di flusso interattivi nell'interfaccia dell'app.
+- **🗣️ Assistente Vocale Intelligente (Voice Overlay):** Un assistente vocale fluttuante disponibile ovunque nell'app. Registra i comandi dell'utente tramite microfono, li invia all'IA e restituisce le risposte.
+- **🌐 Supporto Completo alla Localizzazione (Multilingue):** Possibilità di cambiare la lingua dell'app tra persiano e inglese istantaneamente, insieme al supporto automatico da destra a sinistra (RTL) per tutti gli elementi.
+- **💾 Archiviazione Locale dei Progetti:** Utilizza un potente database per archiviare tutti i progetti generati per futuri accessi offline.
+- **📱 UI Moderna (Glassmorphism):** Utilizza elementi simili al vetro, schemi di colori neon accattivanti e gradienti attraenti utilizzando la tecnologia Jetpack Compose.
+
+## 🛠️ Tecnologie e Architettura
+Il team Wirangar ha utilizzato gli strumenti di sviluppo Android più aggiornati per costruire questa applicazione:
+- **Linguaggio di Programmazione:** Kotlin
+- **UI Toolkit:** Jetpack Compose
+- **Architettura:** MVVM + StateFlow
+- **Iniezione delle Dipendenze:** Dagger Hilt
+- **Gestione del Database:** Room Database
+- **Comunicazioni di Rete:** Retrofit & Moshi
+- **Gestione delle Immagini:** Coil-Compose
+- **Servizi AI:** Google Gemini API
+
+## ⚙️ Guida all'Installazione e Configurazione
+Per eseguire questo progetto sul tuo sistema, segui questi passaggi:
+1. Apri [Android Studio](https://developer.android.com/studio) e clicca su `Open` per aprire la cartella del progetto.
+2. Nella directory principale del progetto (dove si trova il file `build.gradle.kts`), crea un file chiamato `.env`.
+3. Inserisci la tua chiave API Gemini dedicata:
+   ```env
+   GEMINI_API_KEY=inserisci_qui_la_tua_api_key
+   ```
+4. Sincronizza il progetto (Sync) e poi compila (Build) ed esegui (Run) sul tuo dispositivo fisico o emulatore.
+
+---
+<p align="center">
+  <b>Sviluppato con innovazione e potenza dal <a href="#">Team Wirangar</a></b>
+</p>
