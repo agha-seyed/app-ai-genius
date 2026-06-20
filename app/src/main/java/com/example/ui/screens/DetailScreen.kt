@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
 import com.example.R
 import com.example.data.ProjectEntity
 import com.example.ui.ContentViewModel
@@ -44,6 +47,7 @@ fun DetailScreen(
     onNavigateBack: () -> Unit,
     onNavigateNext: () -> Unit
 ) {
+    val context = LocalContext.current
     var project by remember { mutableStateOf<ProjectEntity?>(null) }
     var textContent by remember { mutableStateOf("") }
     var flowchartSteps by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -93,8 +97,16 @@ fun DetailScreen(
                     }
                 },
                  actions = {
-                    IconButton(onClick = {  }) {
-                        Icon(Icons.Filled.AutoFixHigh, "Refine", tint = GeoAmber)
+                    IconButton(onClick = {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, textContent)
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }) {
+                        Icon(Icons.Filled.Share, "Share", tint = GeoAmber)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)

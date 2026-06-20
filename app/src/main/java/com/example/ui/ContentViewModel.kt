@@ -86,6 +86,10 @@ class ContentViewModel @Inject constructor(
             _voiceState.value = VoiceState.Processing
             try {
                 val settings = preferencesRepository.userSettingsFlow.first()
+                if (settings.selectedTtsVoice.isNotEmpty()) {
+                    voiceManager?.setVoice(settings.selectedTtsVoice)
+                }
+                
                 val systemPrompt = settings.systemPrompt
                 val prompt = "$systemPrompt\n\nRespond briefly to the following query: $text"
                 val response = generateAiResponse(prompt, settings)
@@ -120,8 +124,14 @@ class ContentViewModel @Inject constructor(
                     if (project.generateCaption) append("کپشن‌های جذاب و هشتگ‌های ترند و مرتبط آماده کن.\n")
                     if (project.generateInfographic) append("علاوه بر اسکریپت، یک فلوچارت هم برای نحوه اجرای این ایده نیاز دارم.\n")
                     append("پاسخ حتما به زبان ${project.language} باشد.\n")
+                    if (project.generateImage) append("همچنین یک پرامپت دقیق و حرفه‌ای به زبان انگلیسی برای تولید عکس کاور/Thumbnail بنویس که شامل جزئیات بصری باشد.\n")
                     append("خیلی مهم: خروجی تو باید حتما و فقط یک آبجکت JSON معتبر باشد و هیچ متن اضافه‌ای قبل یا بعد از آن نباشد. ساختار JSON باید اینگونه باشد:\n")
-                    append("{\n  \"script\": \"متن کامل اسکریپت و کپشن در اینجا\",\n  \"flowchart\": [\"قدم اول\", \"قدم دوم\", \"قدم سوم\"]\n}")
+                    val jsonStructure = if (project.generateImage) {
+                        "{\n  \"script\": \"متن کامل اسکریپت و کپشن در اینجا\",\n  \"flowchart\": [\"قدم اول\", \"قدم دوم\"],\n  \"image_prompt\": \"english prompt for image generation\"\n}"
+                    } else {
+                        "{\n  \"script\": \"متن کامل اسکریپت و کپشن در اینجا\",\n  \"flowchart\": [\"قدم اول\", \"قدم دوم\"]\n}"
+                    }
+                    append(jsonStructure)
                  }
                 
                 val settings = preferencesRepository.userSettingsFlow.first()
@@ -137,7 +147,8 @@ class ContentViewModel @Inject constructor(
                         "ضبط کلیپ و نریشن",
                         "تدوین و اضافه کردن افکت‌های بصری",
                         "انتشار و تعامل با مخاطب"
-                      ]
+                      ],
+                      "image_prompt": "A cinematic high quality photography of ${project.topic}, neon lighting, masterpiece, 8k resolution"
                     }
                     """.trimIndent()
                 }

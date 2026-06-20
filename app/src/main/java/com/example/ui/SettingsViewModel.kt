@@ -45,4 +45,10 @@ class SettingsViewModel @Inject constructor(
             preferencesRepository.updateSystemPrompt(prompt)
         }
     }
+
+    fun updateTtsVoice(voiceName: String) {
+        viewModelScope.launch {
+            preferencesRepository.updateTtsVoice(voiceName)
+        }
+    }
 }

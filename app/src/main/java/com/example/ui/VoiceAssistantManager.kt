@@ -36,6 +36,21 @@ class VoiceAssistantManager(
         }
     }
 
+    fun getAvailableVoices(): List<android.speech.tts.Voice> {
+        return try {
+            tts?.voices?.toList() ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun setVoice(voiceName: String) {
+        val voice = getAvailableVoices().find { it.name == voiceName }
+        if (voice != null) {
+            tts?.voice = voice
+        }
+    }
+
     private fun setupSpeechRecognizer() {
         if (SpeechRecognizer.isRecognitionAvailable(context)) {
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)

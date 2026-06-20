@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,6 +32,8 @@ import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import kotlinx.coroutines.delay
 import coil.compose.AsyncImage
+import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +43,7 @@ fun FinalAssetsScreen(
     onNavigateBack: () -> Unit
 ) {
     var project by remember { mutableStateOf<ProjectEntity?>(null) }
+    val context = LocalContext.current
     
     LaunchedEffect(projectId) {
         viewModel.allProjects.collect { projects ->
@@ -134,30 +138,62 @@ fun FinalAssetsScreen(
                                     Text(stringResource(R.string.gallery_title), style = MaterialTheme.typography.titleMedium, color = GeoAmberLight)
                                     Spacer(modifier = Modifier.height(16.dp))
                                     
+                                    val imagePromptText = remember(p.resultText) {
+                                        val rawText = p.resultText ?: ""
+                                        val cleanText = rawText.removePrefix("```json").removePrefix("```").removeSuffix("```").trim()
+                                        try {
+                                            org.json.JSONObject(cleanText).optString("image_prompt", p.topic)
+                                        } catch(e: Exception) {
+                                            p.topic
+                                        }
+                                    }
+                                    
                                     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
                                         // Main Poster
                                         Box(modifier = Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
+                                            val url = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " high quality cinematic poster")}"
                                             AsyncImage(
-                                                model = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(p.topic + " high quality cinematic poster")}",
+                                                model = url,
                                                 contentDescription = "Main Poster",
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentScale = androidx.compose.ui.layout.ContentScale.Crop
                                             )
-                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoAmberLight, CircleShape).size(48.dp)) {
-                                                Icon(Icons.Filled.Download, "Download", tint = GeoBackground, modifier = Modifier.size(24.dp))
+                                            IconButton(
+                                                onClick = {
+                                                    val sendIntent = Intent().apply {
+                                                        action = Intent.ACTION_SEND
+                                                        putExtra(Intent.EXTRA_TEXT, url)
+                                                        type = "text/plain"
+                                                    }
+                                                    context.startActivity(Intent.createChooser(sendIntent, null))
+                                                }, 
+                                                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoAmberLight, CircleShape).size(48.dp)
+                                            ) {
+                                                Icon(Icons.Filled.Share, "Share", tint = GeoBackground, modifier = Modifier.size(24.dp))
                                             }
                                         }
                                         
                                         // Cover Image
                                         Box(modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
+                                            val url2 = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " youtube thumbnail cover")}"
                                             AsyncImage(
-                                                model = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(p.topic + " youtube thumbnail cover")}",
+                                                model = url2,
                                                 contentDescription = "Cover Image",
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentScale = androidx.compose.ui.layout.ContentScale.Crop
                                             )
-                                            IconButton(onClick = {}, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoGold, CircleShape).size(48.dp)) {
-                                                Icon(Icons.Filled.Download, "Download", tint = GeoBackground, modifier = Modifier.size(24.dp))
+                                            IconButton(
+                                                onClick = {
+                                                    val sendIntent = Intent().apply {
+                                                        action = Intent.ACTION_SEND
+                                                        putExtra(Intent.EXTRA_TEXT, url2)
+                                                        type = "text/plain"
+                                                    }
+                                                    context.startActivity(Intent.createChooser(sendIntent, null))
+                                                }, 
+                                                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).background(GeoGold, CircleShape).size(48.dp)
+                                            ) {
+                                                Icon(Icons.Filled.Share, "Share", tint = GeoBackground, modifier = Modifier.size(24.dp))
                                             }
                                         }
                                     }

@@ -103,6 +103,26 @@ fun DashboardScreen(
         }
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
+            // Premium Banner
+            GlassCard(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp).clickable { /* TODO: Launch BillingManager */ },
+                cornerRadius = 16.dp
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(GeoGold.copy(alpha=0.3f), GeoAmberLight.copy(alpha=0.1f)))).padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text("ارتقا به نسخه پرو 🌟", color = GeoAmberLight, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                        Text("دسترسی به ساخت عکس و دستیار صوتی", color = GeoTextSecondary, style = MaterialTheme.typography.labelSmall)
+                    }
+                    Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(GeoGold).padding(horizontal = 12.dp, vertical = 6.dp)) {
+                        Text("خرید اشتراک", color = GeoBackground, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
+                    }
+                }
+            }
+
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(stringResource(R.string.dash_recent), style = MaterialTheme.typography.labelMedium, color = GeoTextSecondary)
             }

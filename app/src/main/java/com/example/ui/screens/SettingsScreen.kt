@@ -18,8 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.speech.tts.TextToSpeech
+import androidx.compose.ui.platform.LocalContext
 import com.example.data.preferences.AiProviderType
 import com.example.ui.SettingsViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +37,29 @@ fun SettingsScreen(
     var groqApiKey by remember { mutableStateOf("") }
     var groqModel by remember { mutableStateOf("") }
     var systemPrompt by remember { mutableStateOf("") }
+    var selectedVoice by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    var ttsVoices by remember { mutableStateOf<List<android.speech.tts.Voice>>(emptyList()) }
+
+    DisposableEffect(context) {
+        var tts: TextToSpeech? = null
+        tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                try {
+                    val voices = tts?.voices?.toList()?.filter { it.locale.language == "en" || it.locale.language == "fa" }
+                    if (voices != null) {
+                        ttsVoices = voices
+                    }
+                } catch (e: Exception) {
+                    // Ignore
+                }
+            }
+        }
+        onDispose {
+            tts?.shutdown()
+        }
+    }
 
     // Sync state once settings are loaded
     LaunchedEffect(settings) {
@@ -43,6 +69,7 @@ fun SettingsScreen(
             groqApiKey = it.groqApiKey
             groqModel = it.groqModel
             systemPrompt = it.systemPrompt
+            selectedVoice = it.selectedTtsVoice
         }
     }
 
@@ -189,6 +216,58 @@ fun SettingsScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00FFCC))
                     ) {
                         Text("ذخیره دستورالعمل", color = Color.Black)
+                    }
+                }
+
+                // Voice Settings
+                SettingSection("صدا و دستیار صوتی (TTS)") {
+                    var expanded by remember { mutableStateOf(false) }
+                    
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        OutlinedTextField(
+                            value = selectedVoice.ifEmpty { "صدای پیش‌فرض سیستم" },
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("صدای دستیار صوتی") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { expanded = true },
+                            colors = TextFieldDefaults.colors(
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.LightGray,
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                disabledTextColor = Color.White
+                            ),
+                            enabled = false // to make it clickable only
+                        )
+                        Box(modifier = Modifier.matchParentSize().clickable { expanded = true })
+                    }
+                    
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(Color(0xFF2C2C2C))
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("صدای پیش‌فرض سیستم", color = Color.White) },
+                            onClick = {
+                                selectedVoice = ""
+                                viewModel.updateTtsVoice("")
+                                expanded = false
+                            }
+                        )
+                        ttsVoices.forEach { voice ->
+                            DropdownMenuItem(
+                                text = { Text("${voice.name} (${voice.locale.displayName})", color = Color.White) },
+                                onClick = {
+                                    selectedVoice = voice.name
+                                    viewModel.updateTtsVoice(voice.name)
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 }
             }

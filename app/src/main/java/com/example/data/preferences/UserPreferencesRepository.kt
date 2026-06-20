@@ -23,7 +23,8 @@ data class UserSettings(
     val openRouterModel: String,
     val groqApiKey: String,
     val groqModel: String,
-    val systemPrompt: String
+    val systemPrompt: String,
+    val selectedTtsVoice: String
 )
 
 @Singleton
@@ -36,6 +37,7 @@ class UserPreferencesRepository @Inject constructor(
     private val GROQ_API_KEY = stringPreferencesKey("groq_api_key")
     private val GROQ_MODEL = stringPreferencesKey("groq_model")
     private val SYSTEM_PROMPT = stringPreferencesKey("system_prompt")
+    private val SELECTED_TTS_VOICE = stringPreferencesKey("selected_tts_voice")
 
     val userSettingsFlow: Flow<UserSettings> = dataStore.data.map { preferences ->
         val providerStr = preferences[ACTIVE_PROVIDER] ?: AiProviderType.GOOGLE_GEMINI.name
@@ -51,7 +53,8 @@ class UserPreferencesRepository @Inject constructor(
             openRouterModel = preferences[OPENROUTER_MODEL] ?: "deepseek/deepseek-chat:free",
             groqApiKey = preferences[GROQ_API_KEY] ?: "",
             groqModel = preferences[GROQ_MODEL] ?: "llama3-8b-8192",
-            systemPrompt = preferences[SYSTEM_PROMPT] ?: "You are an AI assistant in a Content Studio."
+            systemPrompt = preferences[SYSTEM_PROMPT] ?: "You are an AI assistant in a Content Studio.",
+            selectedTtsVoice = preferences[SELECTED_TTS_VOICE] ?: ""
         )
     }
 
@@ -75,5 +78,9 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun updateSystemPrompt(prompt: String) {
         dataStore.edit { it[SYSTEM_PROMPT] = prompt }
+    }
+
+    suspend fun updateTtsVoice(voiceName: String) {
+        dataStore.edit { it[SELECTED_TTS_VOICE] = voiceName }
     }
 }
