@@ -28,6 +28,7 @@ import com.example.ui.components.PulseEffect
 import com.example.ui.screens.CreateProjectScreen
 import com.example.ui.screens.DashboardScreen
 import com.example.ui.screens.DetailScreen
+import com.example.ui.screens.SettingsScreen
 import com.example.ui.theme.MyApplicationTheme
 
 import androidx.compose.ui.platform.LocalConfiguration
@@ -74,9 +75,15 @@ class MainActivity : ComponentActivity() {
                                         viewModel = viewModel,
                                         onNavigateToCreate = { navController.navigate("create") },
                                         onNavigateToDetail = { id -> navController.navigate("detail/$id") },
+                                        onNavigateToSettings = { navController.navigate("settings") },
                                         onToggleLanguage = { currentLang = if (currentLang == "fa") "en" else "fa" }
                                     )
                                 }
+                            composable("settings") {
+                                SettingsScreen(
+                                    onNavigateBack = { navController.popBackStack() }
+                                )
+                            }
                             composable("create") {
                                 CreateProjectScreen(
                                     viewModel = viewModel,

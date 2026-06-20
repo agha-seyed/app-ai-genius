@@ -19,13 +19,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 
+import com.example.ai.AiProviderFactory
+import com.example.data.preferences.UserPreferencesRepository
+import com.example.data.preferences.UserSettings
+import kotlinx.coroutines.flow.first
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ContentViewModel @Inject constructor(
     application: Application,
-    private val repository: ProjectRepository
+    private val repository: ProjectRepository,
+    private val preferencesRepository: UserPreferencesRepository,
+    private val aiProviderFactory: AiProviderFactory
 ) : AndroidViewModel(application) {
 
 
@@ -78,8 +85,10 @@ class ContentViewModel @Inject constructor(
         viewModelScope.launch {
             _voiceState.value = VoiceState.Processing
             try {
-                val prompt = "You are an AI assistant in a Content Studio. Respond briefly to the following query: $text"
-                val response = generateGeminiResponse(prompt)
+                val settings = preferencesRepository.userSettingsFlow.first()
+                val systemPrompt = settings.systemPrompt
+                val prompt = "$systemPrompt\n\nRespond briefly to the following query: $text"
+                val response = generateAiResponse(prompt, settings)
                 _voiceState.value = VoiceState.Success(response)
                 speak(response)
             } catch (e: Exception) {
@@ -115,8 +124,9 @@ class ContentViewModel @Inject constructor(
                     append("{\n  \"script\": \"متن کامل اسکریپت و کپشن در اینجا\",\n  \"flowchart\": [\"قدم اول\", \"قدم دوم\", \"قدم سوم\"]\n}")
                  }
                 
+                val settings = preferencesRepository.userSettingsFlow.first()
                 val result = try {
-                    generateGeminiResponse(prompt)
+                    generateAiResponse(prompt, settings)
                 } catch (e: Exception) {
                     """
                     {
@@ -147,7 +157,8 @@ class ContentViewModel @Inject constructor(
             _uiState.value = UiState.Loading
             try {
                 val prompt = "این متن استراتژی محتوا را بهینه‌سازی کن و از نظر نگارشی و جذابیت ارتقا بده. به زبان فارسی پاسخ بده:\\n\$text"
-                val result = generateGeminiResponse(prompt)
+                val settings = preferencesRepository.userSettingsFlow.first()
+                val result = generateAiResponse(prompt, settings)
                 _uiState.value = UiState.RefinedSuccess(result)
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message ?: "Unknown Error")
@@ -155,9 +166,9 @@ class ContentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun generateGeminiResponse(prompt: String): String = withContext(Dispatchers.IO) {
-         val response = com.example.network.GeminiClient.generativeModel.generateContent(prompt)
-         response.text ?: "No response from AI."
+    private suspend fun generateAiResponse(prompt: String, settings: UserSettings): String {
+         val generator = aiProviderFactory.getGenerator(settings)
+         return generator.generateContent(prompt)
     }
 
     fun clearState() {

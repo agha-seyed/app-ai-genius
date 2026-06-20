@@ -35,6 +35,7 @@ fun DashboardScreen(
     viewModel: ContentViewModel,
     onNavigateToCreate: () -> Unit,
     onNavigateToDetail: (Int) -> Unit,
+    onNavigateToSettings: () -> Unit,
     onToggleLanguage: () -> Unit
 ) {
     val projects by viewModel.allProjects.collectAsState()
@@ -87,7 +88,7 @@ fun DashboardScreen(
                     BottomNavItem("🏠", stringResource(R.string.nav_home), true) {}
                     BottomNavItem("✨", stringResource(R.string.nav_create), false) { onNavigateToCreate() }
                     BottomNavItem("📊", stringResource(R.string.nav_stats), false) {}
-                    BottomNavItem("⚙️", stringResource(R.string.nav_settings), false) {}
+                    BottomNavItem("⚙️", stringResource(R.string.nav_settings), false) { onNavigateToSettings() }
                 }
             }
         },
