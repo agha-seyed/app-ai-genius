@@ -185,6 +185,14 @@ class ContentViewModel @Inject constructor(
     fun clearState() {
         _uiState.value = UiState.Idle
     }
+    fun stopSpeaking() {
+        voiceManager?.stopSpeaking()
+    }
+
+    fun exportAudio(text: String, outputFile: java.io.File) {
+        voiceManager?.exportAudio(text, outputFile)
+    }
+
     fun clearVoiceState() {
          _voiceState.value = VoiceState.Idle
     }

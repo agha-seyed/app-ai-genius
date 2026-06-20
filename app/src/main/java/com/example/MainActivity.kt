@@ -66,10 +66,22 @@ class MainActivity : ComponentActivity() {
                 MyApplicationTheme {
                     val navController = rememberNavController()
                     val viewModel: ContentViewModel = hiltViewModel()
+                    val snackbarHostState = remember { SnackbarHostState() }
 
-                    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            NavHost(navController = navController, startDestination = "dashboard") {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                        containerColor = MaterialTheme.colorScheme.background
+                    ) { innerPadding ->
+                        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                            NavHost(
+                                navController = navController, 
+                                startDestination = "dashboard",
+                                enterTransition = { androidx.compose.animation.slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
+                                exitTransition = { fadeOut() },
+                                popEnterTransition = { fadeIn() },
+                                popExitTransition = { androidx.compose.animation.slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                            ) {
                                 composable("dashboard") {
                                     DashboardScreen(
                                         viewModel = viewModel,

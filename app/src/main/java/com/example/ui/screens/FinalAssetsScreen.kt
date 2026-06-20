@@ -112,7 +112,7 @@ fun FinalAssetsScreen(
                                             Spacer(Modifier.height(24.dp))
                                             Waveform(isPlaying)
                                             Spacer(Modifier.height(24.dp))
-                                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                                                 IconButton(
                                                     onClick = { 
                                                         isPlaying = !isPlaying
@@ -125,6 +125,17 @@ fun FinalAssetsScreen(
                                                     modifier = Modifier.size(72.dp).background(if(isPlaying) GeoGlassBorder else GeoAmberLight, CircleShape)
                                                 ) {
                                                     Icon(if(isPlaying) Icons.Filled.Stop else Icons.Filled.PlayArrow, "Play/Stop", tint = if(isPlaying) GeoTextPrimary else GeoBackground, modifier = Modifier.size(40.dp))
+                                                }
+                                                Spacer(Modifier.width(16.dp))
+                                                IconButton(
+                                                    onClick = {
+                                                        val file = java.io.File(context.cacheDir, "audio_export.wav")
+                                                        viewModel.exportAudio(scriptText, file)
+                                                        android.widget.Toast.makeText(context, "Audio saved to cache: ${file.absolutePath}", android.widget.Toast.LENGTH_LONG).show()
+                                                    },
+                                                    modifier = Modifier.size(48.dp).background(GeoGlassBg, CircleShape)
+                                                ) {
+                                                    Icon(Icons.Filled.Download, "Download Audio", tint = GeoAmberLight)
                                                 }
                                             }
                                         }
@@ -148,10 +159,16 @@ fun FinalAssetsScreen(
                                         }
                                     }
                                     
-                                    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                                        val aspectRatioParams = when(p.platform.lowercase()) {
+                                            "youtube" -> "width=1920&height=1080"
+                                            "tiktok", "reels", "shorts" -> "width=1080&height=1920"
+                                            else -> "width=1080&height=1080"
+                                        }
+                                        
                                         // Main Poster
-                                        Box(modifier = Modifier.fillMaxWidth().height(200.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
-                                            val url = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " high quality cinematic poster")}"
+                                        val posterHeight = if (aspectRatioParams.contains("1920&height=1080")) 160.dp else if (aspectRatioParams.contains("1080&height=1920")) 280.dp else 200.dp
+                                        Box(modifier = Modifier.fillMaxWidth().height(posterHeight).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
+                                            val url = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " high quality cinematic poster")}?${aspectRatioParams}"
                                             AsyncImage(
                                                 model = url,
                                                 contentDescription = "Main Poster",
@@ -174,8 +191,8 @@ fun FinalAssetsScreen(
                                         }
                                         
                                         // Cover Image
-                                        Box(modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
-                                            val url2 = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " youtube thumbnail cover")}"
+                                        Box(modifier = Modifier.fillMaxWidth().height(posterHeight).clip(RoundedCornerShape(32.dp)).background(Brush.linearGradient(listOf(GeoBlackTranslucent, GeoGlassBg))), contentAlignment = Alignment.Center) {
+                                            val url2 = "https://image.pollinations.ai/prompt/${android.net.Uri.encode(imagePromptText + " youtube thumbnail cover")}?${aspectRatioParams}"
                                             AsyncImage(
                                                 model = url2,
                                                 contentDescription = "Cover Image",

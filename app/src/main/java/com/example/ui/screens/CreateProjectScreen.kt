@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -134,6 +135,33 @@ fun CreateProjectScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             
+            // Section 0: Personas
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("پرسونای آماده (Quick Setup)", style = MaterialTheme.typography.titleMedium, color = GeoAmberLight, fontWeight = FontWeight.Bold)
+                androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    val personas = listOf(
+                        "بلاگر تکنولوژی" to { platform = "YouTube"; visualStyle = "Cinematic"; voiceTone = "پرانرژی"; genVoice = true },
+                        "مربی انگیزشی" to { platform = "Instagram"; visualStyle = "Minimalist"; voiceTone = "حماسی"; genVoice = true },
+                        "طنزپرداز" to { platform = "TikTok"; visualStyle = "Vibrant"; voiceTone = "شاد و خنده‌دار"; genVoice = true }
+                    )
+                    items(personas.size) { i ->
+                        val persona = personas[i]
+                        Surface(
+                            modifier = Modifier.clickable { persona.second() },
+                            color = GeoGlassBg,
+                            shape = RoundedCornerShape(16.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, GeoGlassBorder)
+                        ) {
+                            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Filled.Person, "Persona", tint = GeoGold, modifier = Modifier.size(20.dp))
+                                Spacer(Modifier.width(8.dp))
+                                Text(persona.first, color = GeoTextPrimary, style = MaterialTheme.typography.labelMedium)
+                            }
+                        }
+                    }
+                }
+            }
+
             // Section 1: Basic Info
             GlassCard(cornerRadius = 16.dp) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {

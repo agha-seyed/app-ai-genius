@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -25,15 +26,17 @@ fun GlassCard(
 ) {
     Card(
         modifier = modifier
-            .border(1.dp, GlassBorder, RoundedCornerShape(cornerRadius))
-            .shadow(16.dp, RoundedCornerShape(cornerRadius), spotColor = Color(0x33000000))
+            .border(1.dp, GlassBorder.copy(alpha = 0.5f), RoundedCornerShape(cornerRadius))
+            .shadow(24.dp, RoundedCornerShape(cornerRadius), spotColor = Color.Black.copy(alpha = 0.2f), ambientColor = Color.White.copy(alpha = 0.1f))
             .clip(RoundedCornerShape(cornerRadius)),
-        colors = CardDefaults.cardColors(containerColor = GlassBackground)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            content = content
-        )
+        Box(modifier = Modifier.background(Brush.linearGradient(listOf(GlassBackground.copy(alpha = 0.6f), GlassBackground.copy(alpha = 0.3f))))) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                content = content
+            )
+        }
     }
 }
 

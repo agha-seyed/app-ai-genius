@@ -111,6 +111,10 @@ class VoiceAssistantManager(
         tts?.stop()
     }
 
+    fun exportAudio(text: String, outputFile: java.io.File) {
+        tts?.synthesizeToFile(text, null, outputFile, "export_audio")
+    }
+
     fun destroy() {
         tts?.stop()
         tts?.shutdown()
