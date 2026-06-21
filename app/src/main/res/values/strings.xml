@@ -64,4 +64,51 @@
     <string name="audio_player_title">Audio Player</string>
     <string name="gallery_title">Image Gallery</string>
     <string name="download">Download / Save</string>
+    <!-- Dashboard FA -->
+    <string name="dash_overview">نمای کلی</string>
+    <string name="dash_welcome_back">خوش برگشتید</string>
+    <string name="nav_home_fa">خانه</string>
+    <string name="nav_create_fa">ایجاد</string>
+    <string name="nav_stats_fa">آمار</string>
+    <string name="nav_settings_fa">تنظیمات</string>
+    <string name="pro_workspace">فضای کاری پرو</string>
+    <string name="pro_desc">دسترسی به امکانات تولید محتوا و دستیار صوتی</string>
+    <string name="upgrade">ارتقا</string>
+    <string name="recent_projects_fa">پروژه‌های اخیر</string>
+    <string name="start_template">شروع الگو</string>
+    <string name="login_title">ورود</string>
+    <string name="login_desc_fa">پروژه‌های خود را بین دستگاه‌ها همگام کنید.</string>
+    <string name="login_google">ورود با گوگل</string>
+    <string name="add_new">پروژه جدید</string>
+
+    <!-- Final Assets FA -->
+    <string name="final_result">نتیجه نهایی</string>
+    <string name="back_btn">بازگشت</string>
+    <string name="audio_player_title_fa">پخش‌کننده صوتی</string>
+    <string name="final_audio_output">خروجی صوتی نهایی</string>
+    <string name="tone_speaker">لحن: %1$s | گوینده: %2$s</string>
+    <string name="gallery_title_fa">گالری تصاویر</string>
+    <string name="download_audio">دانلود فایل صوتی</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="main_poster">پوستر اصلی</string>
+    <string name="cover_image">تصویر کاور</string>
+    <string name="audio_saved">فایل صوتی ذخیره شد: %1$s</string>
+    <string name="audio_icon">صدا</string>
+    <string name="play_stop">پخش/توقف</string>
+    <!-- Settings FA -->
+    <string name="settings_title">تنظیمات هوش مصنوعی</string>
+    <string name="active_provider">سرویس‌دهنده فعال</string>
+    <string name="settings_openrouter">تنظیمات OpenRouter</string>
+    <string name="settings_groq">تنظیمات Groq</string>
+    <string name="api_key_label">API Key</string>
+    <string name="openrouter_model_label">نام مدل (مثل deepseek/deepseek-chat)</string>
+    <string name="groq_model_label">نام مدل (مثل llama3-8b-8192)</string>
+    <string name="save_openrouter">ذخیره تنظیمات OpenRouter</string>
+    <string name="save_groq">ذخیره تنظیمات Groq</string>
+    <string name="system_prompt_title">دستورالعمل سیستم (System Prompt)</string>
+    <string name="system_prompt_label">نحوه رفتار هوش مصنوعی</string>
+    <string name="save_prompt">ذخیره دستورالعمل</string>
+    <string name="voice_settings_title">صدا و دستیار صوتی (TTS)</string>
+    <string name="voice_label">صدای دستیار صوتی</string>
+    <string name="default_system_voice">صدای پیش‌فرض سیستم</string>
 </resources>

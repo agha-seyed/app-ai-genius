@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,14 +23,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
-import com.example.ui.ContentViewModel
-import com.example.ui.VoiceState
-import com.example.ui.components.PulseEffect
-import com.example.ui.screens.CreateProjectScreen
-import com.example.ui.screens.DashboardScreen
-import com.example.ui.screens.DetailScreen
-import com.example.ui.screens.SettingsScreen
-import com.example.ui.theme.MyApplicationTheme
+import com.example.presentation.ContentViewModel
+import com.example.presentation.VoiceState
+import com.example.presentation.components.PulseEffect
+import com.example.presentation.screens.CreateProjectScreen
+import com.example.presentation.screens.DashboardScreen
+import com.example.presentation.screens.DetailScreen
+import com.example.presentation.screens.SettingsScreen
+import com.example.presentation.theme.MyApplicationTheme
 
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: ContentViewModel = hiltViewModel()
             val context = LocalContext.current
             var currentLang by remember { mutableStateOf("fa") }
             
@@ -65,7 +67,6 @@ class MainActivity : ComponentActivity() {
             ) {
                 MyApplicationTheme {
                     val navController = rememberNavController()
-                    val viewModel: ContentViewModel = hiltViewModel()
                     val snackbarHostState = remember { SnackbarHostState() }
 
                     Scaffold(
@@ -120,7 +121,7 @@ class MainActivity : ComponentActivity() {
                             composable("assets/{id}") { backStackEntry ->
                                 val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
                                 if (id != null) {
-                                    com.example.ui.screens.FinalAssetsScreen(
+                                    com.example.presentation.screens.FinalAssetsScreen(
                                         projectId = id,
                                         viewModel = viewModel,
                                         onNavigateBack = { navController.popBackStack() }
@@ -141,8 +142,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun VoiceAssistantOverlay(viewModel: ContentViewModel, modifier: Modifier = Modifier) {
-    val voiceState by viewModel.voiceState.collectAsState()
-    val speechText by viewModel.speechText.collectAsState()
+    val voiceState by viewModel.voiceState.collectAsStateWithLifecycle()
+    val speechText by viewModel.speechText.collectAsStateWithLifecycle()
     
     Column(horizontalAlignment = Alignment.End, modifier = modifier) {
         AnimatedVisibility(
@@ -152,24 +153,25 @@ fun VoiceAssistantOverlay(viewModel: ContentViewModel, modifier: Modifier = Modi
         ) {
             Surface(
                 modifier = Modifier.padding(bottom = 16.dp).widthIn(max = 250.dp),
-                color = com.example.ui.theme.GlassBackground,
-                shape = MaterialTheme.shapes.medium
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
             ) {
-                Column(modifier = Modifier.padding(12.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = when (voiceState) { // Exhaustive when to avoid missing branches initially
-                            is VoiceState.Listening -> "Listening..."
-                            is VoiceState.Processing -> "Thinking..."
+                        text = when (voiceState) {
+                            is VoiceState.Listening -> "در حال شنیدن..."
+                            is VoiceState.Processing -> "در حال پردازش..."
                             is VoiceState.Success -> (voiceState as VoiceState.Success).response
                             is VoiceState.Error -> androidx.compose.ui.res.stringResource(com.example.R.string.error_unknown)
                             else -> ""
                         },
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodySmall
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                     if (speechText.isNotEmpty()) {
-                        Spacer(Modifier.height(4.dp))
-                        Text(text = "🗣️ \$speechText", color = Color.Gray, style = MaterialTheme.typography.labelSmall)
+                        Spacer(Modifier.height(8.dp))
+                        Text(text = "🗣️ $speechText", color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.labelMedium)
                     }
                 }
             }
@@ -177,17 +179,19 @@ fun VoiceAssistantOverlay(viewModel: ContentViewModel, modifier: Modifier = Modi
 
         Box(contentAlignment = Alignment.Center, modifier = Modifier.size(64.dp)) {
             if (voiceState == VoiceState.Listening) {
-                PulseEffect(color = Color.Red, modifier = Modifier.matchParentSize()) {}
+                PulseEffect(color = MaterialTheme.colorScheme.error, modifier = Modifier.matchParentSize()) {}
             }
             FloatingActionButton(
                 onClick = { 
                     if (voiceState == VoiceState.Idle) viewModel.startListening()
                     else viewModel.stopListening()
                 },
-                containerColor = if (voiceState == VoiceState.Listening) Color.Red else MaterialTheme.colorScheme.tertiary,
-                shape = CircleShape
+                containerColor = if (voiceState == VoiceState.Listening) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                contentColor = if (voiceState == VoiceState.Listening) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onPrimary,
+                shape = CircleShape,
+                modifier = Modifier.size(56.dp)
             ) {
-                Icon(Icons.Filled.Mic, contentDescription = "Voice Assistant", tint = Color.White)
+                Icon(Icons.Filled.Mic, contentDescription = "دستیار صوتی")
             }
         }
     }

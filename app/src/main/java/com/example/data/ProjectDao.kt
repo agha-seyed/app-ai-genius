@@ -12,6 +12,9 @@ interface ProjectDao {
     @Query("SELECT * FROM projects ORDER BY dateCreated DESC")
     fun getAllProjects(): Flow<List<ProjectEntity>>
 
+    @Query("SELECT * FROM projects ORDER BY dateCreated DESC")
+    suspend fun getAllProjectsSync(): List<ProjectEntity>
+
     @Query("SELECT * FROM projects WHERE id = :id LIMIT 1")
     suspend fun getProjectById(id: Int): ProjectEntity?
 

@@ -9,6 +9,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+class ApiException(message: String) : Exception(message)
+
 interface AiContentGenerator {
     suspend fun generateContent(prompt: String): String
 }
@@ -17,7 +19,7 @@ interface AiContentGenerator {
 class GeminiGeneratorImpl @Inject constructor() : AiContentGenerator {
     override suspend fun generateContent(prompt: String): String = withContext(Dispatchers.IO) {
         val response = GeminiClient.generativeModel.generateContent(prompt)
-        response.text ?: throw Exception("No response from Gemini.")
+        response.text ?: throw ApiException("سرویس هوش مصنوعی (Gemini) پاسخی نداد. لطفاً مجدداً تلاش کنید.")
     }
 }
 
@@ -47,6 +49,6 @@ class OpenAiCompatibleGeneratorImpl(
         )
         
         response.choices?.firstOrNull()?.message?.content 
-            ?: throw Exception("No response from $modelName.")
+            ?: throw ApiException("سرویس هوش مصنوعی ($modelName) پاسخی نداد. لطفاً کلید API را بررسی کرده یا مجدداً تلاش کنید.")
     }
 }

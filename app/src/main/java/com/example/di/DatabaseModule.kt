@@ -3,7 +3,8 @@ package com.example.di
 import android.content.Context
 import com.example.data.AppDatabase
 import com.example.data.ProjectDao
-import com.example.data.ProjectRepository
+import com.example.data.ProjectRepositoryImpl
+import com.example.domain.repository.ProjectRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +31,6 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideProjectRepository(dao: ProjectDao): ProjectRepository {
-        return ProjectRepository(dao)
+        return ProjectRepositoryImpl(dao)
     }
 }
